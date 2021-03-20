@@ -5,9 +5,9 @@ int osSetTimer(OSTimer *t, OSTime value, OSTime interval, OSMesgQueue *mq, OSMes
     OSTime time;
     t->next = NULL;
     t->prev = NULL;
+    t->value = value;
     t->interval = interval;
-    if(value != 0) t->value = value;
-    else t->value = interval;
+    if(value == 0) t->value = interval;
     t->mq = mq;
     t->msg = msg;
     time = __osInsertTimer(t);

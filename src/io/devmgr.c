@@ -2,6 +2,15 @@
 #include <rcp.h>
 #include "piint.h"
 
+struct test {
+  u32 test;
+};
+
+// Is this cheating? Too bad!
+#define LOAD_PHYSICAL_ADDR(out, addr) \
+  __asm__ __volatile__("lui %0, %1"     : "=r" (out) :            "i" (PHYS_TO_K1(addr) >> 16)); \
+  __asm__ __volatile__("ori %0, %1, %2" : "=r" (out) : "r" (out), "i" (PHYS_TO_K1(addr) & 0xFFFF)); \
+
 void __osDevMgrMain(void *args)
 {
   OSIoMesg *mb;
@@ -48,6 +57,7 @@ void __osDevMgrMain(void *args)
         if (blockInfo->errStatus == LEO_ERROR_29)
         {
           u32 stat;
+          vu32 *piReg;
           osEPiRawWriteIo(mb->piHandle, LEO_BM_CTL, info->bmCtlShadow | LEO_BM_CTL_RESET); //TODO: remove magic constants
           osEPiRawWriteIo(mb->piHandle, LEO_BM_CTL, info->bmCtlShadow);
           osEPiRawReadIo(mb->piHandle, LEO_STATUS, &stat);
@@ -56,9 +66,9 @@ void __osDevMgrMain(void *args)
           {
             osEPiRawWriteIo(mb->piHandle, LEO_BM_CTL, info->bmCtlShadow | LEO_BM_CTL_CLR_MECHANIC_INTR);
           }
-
+          LOAD_PHYSICAL_ADDR(piReg, PI_STATUS_REG);
           blockInfo->errStatus = LEO_ERROR_4;
-          IO_WRITE(PI_STATUS_REG, PI_CLR_INTR);
+          *piReg = PI_CLR_INTR;
           __osSetGlobalIntMask(OS_IM_PI | SR_IBIT4);
         }
         osSendMesg(mb->hdr.retQueue, mb, OS_MESG_NOBLOCK);

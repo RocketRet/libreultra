@@ -4,11 +4,11 @@
 #include "../os/osint.h"
 #include "piint.h"
 
-
+// TODO bss
 //TODO: so many magic constants :'(
 static void __osLeoResume(void);
 static void __osLeoAbnormalResume(void);
-u8 leoDiskStack[OS_PIM_STACKSIZE]; //technically should have a OS_LEO_STACKSIZE or something..
+extern u8 leoDiskStack[OS_PIM_STACKSIZE]; //technically should have a OS_LEO_STACKSIZE or something..
 s32 __osLeoInterrupt()
 {
 	u32 stat;
@@ -111,7 +111,7 @@ s32 __osLeoInterrupt()
 		}
 		if (stat & LEO_STATUS_C2_TRANSFER)
 		{
-			if (info->sectorNum != 87)
+			if (info->sectorNum + 1 != 88)
 			{
 				blockInfo->errStatus = LEO_ERROR_24;
 				__osLeoAbnormalResume();

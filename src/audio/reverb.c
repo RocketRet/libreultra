@@ -23,6 +23,7 @@
 #include "synthInternals.h"
 #include <os.h>
 #include <os_internal.h>
+// #include <stdio.h>
 #include <assert.h>
 #include "initfx.h"
 
@@ -71,7 +72,7 @@ Acmd *alFxPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset,
     lastCnt[++cnt_index] = osGetCount();
 #endif
     
-    assert(source);
+    assert_filename(source, "reverb.c");
     /*
      * pull channels going into this effect first
      */

@@ -1,11 +1,11 @@
 #include <os_internal.h>
 #include "piint.h"
-
-OSDevMgr __osPiDevMgr = {0};
-OSPiHandle *__osPiTable = NULL;
-OSPiHandle *__osCurrentHandle[2] = {&CartRomHandle, &LeoDiskHandle};
-static OSThread piThread;
-static char piThreadStack[OS_PIM_STACKSIZE];
+// TODO data bss
+extern /*static*/ OSDevMgr __osPiDevMgr;// = {0};
+extern /*static*/ OSPiHandle *__osPiTable;// = NULL;
+extern /*static*/ OSPiHandle *__osCurrentHandle[2];// = {&CartRomHandle, &LeoDiskHandle};
+extern /*static*/ OSThread piThread;
+extern /*static*/ char piThreadStack[OS_PIM_STACKSIZE];
 #ifdef _DEBUG
 static OSThread ramromThread;
 static char ramromThreadStack[OS_RAMROM_STACKSIZE];
@@ -14,8 +14,8 @@ static OSMesg getRamromBuf[1];
 static OSMesgQueue freeRamromQ;
 static OSMesg freeRamromBuf[1];
 #endif
-static OSMesgQueue piEventQueue;
-static OSMesg piEventBuf[1];
+extern /*static*/ OSMesgQueue piEventQueue;
+extern /*static*/ OSMesg piEventBuf;//[1];
 void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgCnt)
 {
 	u32 savedMask;

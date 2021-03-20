@@ -1,13 +1,13 @@
 #include <os_internal.h>
 #include "controller.h"
 #include "siint.h"
-
+// TODO bss
 static void _MakeMotorData(int channel, u16 address, u8 *buffer, OSPifRam *mdata);
 u32 __osMotorinitialized[MAXCONTROLLERS] = {0, 0, 0, 0};
-OSPifRam _MotorStopData[MAXCONTROLLERS];
-OSPifRam _MotorStartData[MAXCONTROLLERS];
-u8 _motorstopbuf[32];
-u8 _motorstartbuf[32];
+extern OSPifRam _MotorStopData[MAXCONTROLLERS];
+extern OSPifRam _MotorStartData[MAXCONTROLLERS];
+extern u8 _motorstopbuf[32];
+extern u8 _motorstartbuf[32];
 s32 osMotorStop(OSPfs *pfs)
 {
     int i;
@@ -35,7 +35,7 @@ s32 osMotorStop(OSPfs *pfs)
 
     ramreadformat = *(__OSContRamReadFormat *)ptr;
     ret = CHNL_ERR(ramreadformat);
-    if (ret == 0 && ramreadformat.datacrc != __osContDataCrc((u8*)&_motorstopbuf))
+    if (ret == 0 && __osContDataCrc((u8*)&_motorstopbuf) != ramreadformat.datacrc)
     {
         ret = PFS_ERR_CONTRFAIL;
     }
@@ -71,7 +71,7 @@ s32 osMotorStart(OSPfs *pfs)
 
     ramreadformat = *(__OSContRamReadFormat *)ptr;
     ret = CHNL_ERR(ramreadformat);
-    if (ret == 0 && ramreadformat.datacrc != __osContDataCrc((u8*)&_motorstartbuf))
+    if (ret == 0 && __osContDataCrc((u8*)&_motorstartbuf) != ramreadformat.datacrc)
     {
         ret = PFS_ERR_CONTRFAIL;
     }

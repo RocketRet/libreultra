@@ -1,9 +1,9 @@
 #include <os_internal.h>
 #include <rcp.h>
 #include <bstring.h>
-
-OSPiHandle LeoDiskHandle;
-OSPiHandle *__osDiskHandle;
+// TODO bss
+extern OSPiHandle LeoDiskHandle;
+extern OSPiHandle *__osDiskHandle;
 OSPiHandle *osLeoDiskInit()
 {
 	u32 saveMask;

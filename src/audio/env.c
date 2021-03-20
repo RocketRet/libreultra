@@ -57,6 +57,8 @@ static s16 eqpower[ EQPOWER_LENGTH ] = {
 
 extern	f64	__pow(f64, f64);
 
+
+
 /*
  * prototypes for private enveloper functions
  */
@@ -99,8 +101,8 @@ Acmd *alEnvmixerPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset,
         if (samples > outCount)
             break;
         
-        assert(samples >= 0);
-        assert(samples <= AL_MAX_RSP_SAMPLES);
+        assert_filename(samples >= 0, "env.c");
+        assert_filename(samples <= AL_MAX_RSP_SAMPLES, "env.c");
         
         switch (e->ctrlList->type) {
           case (AL_FILTER_START_VOICE_ALT):
@@ -362,7 +364,7 @@ Acmd* _pullSubFrame(void *filter, s16 *inp, s16 *outp, s32 outCount,
      * ask all filters upstream from us to build their command
      * lists.
      */
-    assert(source);
+    assert_filename(source, "env.c");
     
     ptr = (*source->handler)(source, inp, outCount, sampleOffset, p);
 

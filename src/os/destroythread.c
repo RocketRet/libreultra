@@ -24,15 +24,16 @@ void osDestroyThread(OSThread *t)
     else
     {
         pred = __osActiveQueue;
-        while (pred->priority != -1)
+        succ = pred->tlnext;
+        while (succ != NULL)
         {
-            succ = pred->tlnext;
             if (succ == t)
             {
                 pred->tlnext = t->tlnext;
                 break;
             }
             pred = succ;
+            succ = pred->tlnext;
         }
     }
     if (t == __osRunningThread)

@@ -333,4 +333,3 @@ s32             _timeToSamples(ALSynth *ALSynth, s32 micros);
 ALMicroTime     _samplesToTime(ALSynth *synth, s32 samples);
 
 #endif
-

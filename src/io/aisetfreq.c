@@ -4,7 +4,7 @@
 s32 osAiSetFrequency(u32 frequency)
 {
     register unsigned int dacRate;
-    register char bitRate;
+    register unsigned char bitRate;
     register float f;
     f = osViClock / (float)frequency + .5f;
     dacRate = f;

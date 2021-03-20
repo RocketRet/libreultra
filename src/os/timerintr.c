@@ -2,11 +2,11 @@
 #include "osint.h"
 
 OSTimer *__osTimerList = &__osBaseTimer;
-OSTimer __osBaseTimer;
-OSTime __osCurrentTime;
-u32 __osBaseCounter;
-u32 __osViIntrCount;
-u32 __osTimerCounter;
+extern OSTimer __osBaseTimer;
+extern OSTime __osCurrentTime; // TODO bss
+extern u32 __osBaseCounter;
+extern u32 __osViIntrCount;
+extern u32 __osTimerCounter;
 void __osTimerServicesInit(void)
 {
 	__osCurrentTime = 0;
@@ -71,7 +71,7 @@ void __osSetTimerIntr(OSTime tim)
 	u32 savedMask;
 	savedMask = __osDisableInt();
 	__osTimerCounter = osGetCount();
-	NewTime = tim + __osTimerCounter;
+	NewTime = __osTimerCounter + tim;
 	__osSetCompare(NewTime);
 	__osRestoreInt(savedMask);
 }

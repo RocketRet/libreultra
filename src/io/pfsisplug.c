@@ -1,23 +1,27 @@
 #include <os_internal.h>
 #include "controller.h"
 #include "siint.h"
-
-OSPifRam __osPfsPifRam;
-s32 osPfsIsPlug(OSMesgQueue *queue, u8 *pattern)
+// TODO bss
+// TODO regalloc
+extern OSPifRam __osPfsPifRam;
+s32 osPfsIsPlug(OSMesgQueue *queue, u8 *inpattern) // queue: s2 in original, s3 in diff, pattern: s7 in both
 {
-    s32 ret;
-    OSMesg dummy;
-    u8 bitpattern;
-    OSContStatus data[MAXCONTROLLERS];
-    int channel;
-    u8 bits;
-    int crc_error_cnt;
-    ret = 0;
+    OSContStatus data[MAXCONTROLLERS]; // sp + 0x10
+    OSMesg dummy; // sp + 0x20
+    u8 bitpattern; // sp + 0x24
+    u32 bits; // s3 in original code, s1 in diff
+    int crc_error_cnt; // s0 in original code, s0 in diff
+    u8 *pattern;
+
+    pattern = inpattern;
     bits = 0;
     crc_error_cnt = 3;
+
     __osSiGetAccess();
     while (TRUE)
     {
+        s32 ret; // s6 in original code, s4 in diff
+        int channel; // a0 in both
         __osPfsRequestData(CONT_CMD_REQUEST_STATUS);
         ret = __osSiRawStartDma(OS_WRITE, &__osPfsPifRam);
         osRecvMesg(queue, &dummy, OS_MESG_BLOCK);
@@ -32,14 +36,16 @@ s32 osPfsIsPlug(OSMesgQueue *queue, u8 *pattern)
                 break;
             }
         }
-        if (__osMaxControllers == channel)
+        if (channel == __osMaxControllers)
             crc_error_cnt = 0;
         if (crc_error_cnt < 1)
         {
             for (channel = 0; channel < __osMaxControllers; channel++)
             {
-                if (data[channel].errno == 0 && (data[channel].status & CONT_CARD_ON) != 0)
-                    bits |= 1 << channel;
+                OSContStatus *dat = &data[0];
+                int shift = 1;
+                if (dat[channel].errno == 0 && (dat[channel].status & CONT_CARD_ON) != 0)
+                    bits |= shift << channel;
             }
             __osSiRelAccess();
             *pattern = bits;

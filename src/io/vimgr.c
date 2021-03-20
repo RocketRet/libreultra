@@ -2,21 +2,21 @@
 #include <rcp.h>
 #include "viint.h"
 #include "../os/osint.h"
-
+ 
 OSDevMgr __osViDevMgr = {0};
-static OSThread viThread;
-static unsigned char viThreadStack[OS_VIM_STACKSIZE];
-static OSMesgQueue viEventQueue;
-static OSMesg viEventBuf[5];
-static OSIoMesg viRetraceMsg;
-static OSIoMesg viCounterMsg;
+extern OSThread viThread;
+extern unsigned char viThreadStack[OS_VIM_STACKSIZE];
+extern OSMesgQueue viEventQueue;
+extern OSMesg viEventBuf[5];
+extern OSIoMesg viRetraceMsg;
+extern OSIoMesg viCounterMsg;
 
 static void viMgrMain(void *arg);
 void osCreateViManager(OSPri pri)
 {
 	u32 savedMask;
-	OSPri oldPri;
 	OSPri myPri;
+	OSPri oldPri;
 	if (__osViDevMgr.active == 0)
 	{
 		__osTimerServicesInit();
@@ -54,12 +54,13 @@ void osCreateViManager(OSPri pri)
 		}
 	}
 }
+extern u16 retrace;
 static void viMgrMain(void *arg)
 {
 	__OSViContext *vc;
 	OSDevMgr *dm;
 	OSIoMesg *mb;
-	static u16 retrace;
+	// static u16 retrace;
 	s32 first;
 	u32 count;
 

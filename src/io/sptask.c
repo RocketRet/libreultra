@@ -9,7 +9,7 @@
 	{                                           \
 		ptr = (void *)osVirtualToPhysical(ptr); \
 	}
-static OSTask tmp_task;
+extern OSTask tmp_task; // TODO static
 static OSTask *_VirtualToPhysicalTask(OSTask *intp)
 {
 	OSTask *tp;

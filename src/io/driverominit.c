@@ -1,8 +1,8 @@
 #include <os_internal.h>
 #include <rcp.h>
 #include <bstring.h>
-
-OSPiHandle DriveRomHandle;
+// TODO bss
+extern OSPiHandle DriveRomHandle;
 OSPiHandle *osDriveRomInit()
 {
 	u32 saveMask;
@@ -28,13 +28,3 @@ OSPiHandle *osDriveRomInit()
 
 	return &DriveRomHandle;
 }
-
-/*
-Disassembly of section .bss:
-
-00000000 <DriveRomHandle>:
-	...
-
-
-
-*/

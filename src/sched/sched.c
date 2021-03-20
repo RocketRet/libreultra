@@ -159,7 +159,7 @@ OSMesgQueue *osScGetCmdQ(OSSched *sc)
 {
     return &sc->cmdQ;
 }
-
+extern int count;
 /***********************************************************************
  * Scheduler implementation
  **********************************************************************/
@@ -168,7 +168,7 @@ static void __scMain(void *arg)
     OSMesg msg;
     OSSched *sc = (OSSched *)arg;
     OSScClient *client;
-    static int count = 0;
+    // static int count = 0;
     
     while (1) {
         
@@ -209,8 +209,8 @@ static void __scMain(void *arg)
 /*
  * scHandleRetrace()
  */
-static int dp_busy = 0;
-static int dpCount = 0;
+extern int dp_busy;// static int dp_busy = 0;
+extern int dpCount;// static int dpCount = 0;
 
 void __scHandleRetrace(OSSched *sc)
 {
@@ -269,7 +269,7 @@ void __scHandleRSP(OSSched *sc)
     s32 state;
 
     
-    assert(sc->curRSPTask);
+    assert_filename(sc->curRSPTask, "sched.c");
 
     t = sc->curRSPTask;
     sc->curRSPTask = 0;
@@ -314,8 +314,8 @@ void __scHandleRDP(OSSched *sc)
     OSScTask *t, *sp = 0, *dp = 0; 
     s32 state;
         
-    assert(sc->curRDPTask);
-    assert(sc->curRDPTask->list.t.type == M_GFXTASK);
+    assert_filename(sc->curRDPTask, "sched.c");
+    assert_filename(sc->curRDPTask->list.t.type == M_GFXTASK, "sched.c");
     
     t = sc->curRDPTask;
     sc->curRDPTask = 0;
@@ -360,7 +360,7 @@ OSScTask *__scTaskReady(OSScTask *t)
 
     return 0;
 }
-
+extern int firsttime;
 /*
  * __scTaskComplete checks to see if the task is complete (all RCP
  * operations have been performed) and sends the done message to the
@@ -369,11 +369,11 @@ OSScTask *__scTaskReady(OSScTask *t)
 s32 __scTaskComplete(OSSched *sc, OSScTask *t) 
 {
     int rv;
-    static int firsttime = 1;
+    // static int firsttime = 1;
 
     if ((t->state & OS_SC_RCP_MASK) == 0) { /* none of the needs bits set */
 
-        assert (t->msgQ);
+        assert_filename(t->msgQ, "sched.c");
 
 #ifndef _FINALROM
 	t->totalTime += osGetTime() - t->startTime;
@@ -409,7 +409,7 @@ void __scAppendList(OSSched *sc, OSScTask *t)
 {
     long type = t->list.t.type;
     
-    assert ( (type == M_AUDTASK) || (type == M_GFXTASK));
+    assert_filename( (type == M_AUDTASK) || (type == M_GFXTASK), "sched.c");
     
     if (type == M_AUDTASK) {
         if (sc->audioListTail)
@@ -449,7 +449,7 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp)
     osLogEvent(l, 511, 2, sp, dp);
 #endif
 
-    assert(sc->curRSPTask == 0);
+    assert_filename(sc->curRSPTask == 0, "sched.c");
 
     if (sp) {
         if (sp->list.t.type == M_AUDTASK) {
@@ -468,7 +468,7 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp)
     }
 
     if (dp && (dp != sp)) {
-        assert(dp->list.t.output_buff);
+        assert_filename(dp->list.t.output_buff, "sched.c");
     
 #ifdef SC_LOGGING
         osLogEvent(l, 523, 3, dp, dp->list.t.output_buff,
@@ -480,7 +480,7 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp)
         dp_busy = 1;
         dpCount = 0;
         
-        assert(rv == 0);
+        assert_filename(rv == 0, "sched.c");
         
         sc->curRDPTask = dp;
     }
@@ -495,7 +495,7 @@ static void __scYield(OSSched *sc)
     
     if (sc->curRSPTask->list.t.type == M_GFXTASK) {
     
-/*	assert(sc->curRSPTask->state & OS_SC_YIELD);*/
+/*	assert_filename(sc->curRSPTask->state & OS_SC_YIELD, "sched.c");*/
 
         sc->curRSPTask->state |= OS_SC_YIELD;
 
@@ -549,7 +549,7 @@ s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)
                       osLogEvent(l, 518, 0);
 #endif                      
 		      /* can hit this if RDP finishes at yield req */
-                      /* assert(gfx->state & OS_SC_DP); */
+                      /* assert_filename(gfx->state & OS_SC_DP, "sched.c"); */
 
                       if (avail & OS_SC_SP) {   /* if SP is available */
 #ifdef SC_LOGGING
@@ -563,7 +563,7 @@ s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)
                               avail &= ~OS_SC_DP;
 
                               if (avail & OS_SC_DP == 0)
-                                  assert(sc->curRDPTask == gfx);
+                                  assert_filename(sc->curRDPTask == gfx, "sched.c");
                               
                           }
 
