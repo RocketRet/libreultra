@@ -2,7 +2,7 @@
 #include <os_internal.h>
 #include <R4300.h>
 #include <rcp.h>
-
+// TODO bss
 typedef struct
 {
    /* 0x0 */ unsigned int inst1;

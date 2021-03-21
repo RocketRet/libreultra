@@ -1,5 +1,5 @@
 #include <os_internal.h>
-
+// TODO bss
 #define PI_Q_BUF_LEN 1
 u32 __osPiAccessQueueEnabled = 0;
 extern /*static*/ OSMesg piAccessBuf[PI_Q_BUF_LEN];
