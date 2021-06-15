@@ -52,7 +52,7 @@
 
 s32 __osSiRawStartDma(s32 direction, void *dramAddr)
 {
-    assert_filename(((u32)dramAddr & 3) == 0, "sirawdma.c");
+    assert(((u32)dramAddr & 3) == 0);
     if (__osSiDeviceBusy())
         return -1;
 

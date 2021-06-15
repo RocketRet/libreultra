@@ -49,7 +49,7 @@
 
 s32 __osSiRawWriteIo(u32 devAddr, u32 data)
 {
-    assert_filename((devAddr & 3) == 0, "sirawwrite.c");
+    assert((devAddr & 3) == 0);
     if (__osSiDeviceBusy())
         return -1;
     IO_WRITE(devAddr, data);

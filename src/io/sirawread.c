@@ -48,8 +48,8 @@
 
 s32 __osSiRawReadIo(u32 devAddr, u32 *data)
 {
-    assert_filename((devAddr & 3) == 0, "sirawread.c");
-    assert_filename(data != NULL, "sirawread.c");
+    assert((devAddr & 3) == 0);
+    assert(data != NULL);
     if (__osSiDeviceBusy())
         return -1;
     *data = IO_READ(devAddr);

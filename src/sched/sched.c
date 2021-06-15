@@ -269,7 +269,7 @@ void __scHandleRSP(OSSched *sc)
     s32 state;
 
     
-    assert_filename(sc->curRSPTask, "sched.c");
+    assert(sc->curRSPTask);
 
     t = sc->curRSPTask;
     sc->curRSPTask = 0;
@@ -314,8 +314,8 @@ void __scHandleRDP(OSSched *sc)
     OSScTask *t, *sp = 0, *dp = 0; 
     s32 state;
         
-    assert_filename(sc->curRDPTask, "sched.c");
-    assert_filename(sc->curRDPTask->list.t.type == M_GFXTASK, "sched.c");
+    assert(sc->curRDPTask);
+    assert(sc->curRDPTask->list.t.type == M_GFXTASK);
     
     t = sc->curRDPTask;
     sc->curRDPTask = 0;
@@ -373,7 +373,7 @@ s32 __scTaskComplete(OSSched *sc, OSScTask *t)
 
     if ((t->state & OS_SC_RCP_MASK) == 0) { /* none of the needs bits set */
 
-        assert_filename(t->msgQ, "sched.c");
+        assert(t->msgQ);
 
 #ifndef _FINALROM
 	t->totalTime += osGetTime() - t->startTime;
@@ -409,7 +409,7 @@ void __scAppendList(OSSched *sc, OSScTask *t)
 {
     long type = t->list.t.type;
     
-    assert_filename( (type == M_AUDTASK) || (type == M_GFXTASK), "sched.c");
+    assert( (type == M_AUDTASK) || (type == M_GFXTASK));
     
     if (type == M_AUDTASK) {
         if (sc->audioListTail)
@@ -449,7 +449,7 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp)
     osLogEvent(l, 511, 2, sp, dp);
 #endif
 
-    assert_filename(sc->curRSPTask == 0, "sched.c");
+    assert(sc->curRSPTask == 0);
 
     if (sp) {
         if (sp->list.t.type == M_AUDTASK) {
@@ -468,7 +468,7 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp)
     }
 
     if (dp && (dp != sp)) {
-        assert_filename(dp->list.t.output_buff, "sched.c");
+        assert(dp->list.t.output_buff);
     
 #ifdef SC_LOGGING
         osLogEvent(l, 523, 3, dp, dp->list.t.output_buff,
@@ -480,7 +480,7 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp)
         dp_busy = 1;
         dpCount = 0;
         
-        assert_filename(rv == 0, "sched.c");
+        assert(rv == 0);
         
         sc->curRDPTask = dp;
     }
@@ -495,7 +495,7 @@ static void __scYield(OSSched *sc)
     
     if (sc->curRSPTask->list.t.type == M_GFXTASK) {
     
-/*	assert_filename(sc->curRSPTask->state & OS_SC_YIELD, "sched.c");*/
+/*	assert(sc->curRSPTask->state & OS_SC_YIELD);*/
 
         sc->curRSPTask->state |= OS_SC_YIELD;
 
@@ -549,7 +549,7 @@ s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)
                       osLogEvent(l, 518, 0);
 #endif                      
 		      /* can hit this if RDP finishes at yield req */
-                      /* assert_filename(gfx->state & OS_SC_DP, "sched.c"); */
+                      /* assert(gfx->state & OS_SC_DP); */
 
                       if (avail & OS_SC_SP) {   /* if SP is available */
 #ifdef SC_LOGGING
@@ -563,7 +563,7 @@ s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)
                               avail &= ~OS_SC_DP;
 
                               if (avail & OS_SC_DP == 0)
-                                  assert_filename(sc->curRDPTask == gfx, "sched.c");
+                                  assert(sc->curRDPTask == gfx);
                               
                           }
 

@@ -22,7 +22,7 @@
 // #include <stdio.h>
 // #include <math.h>
 extern void __assert(const char *, const char *, int);
-#define assert_filename(EX, filename)  ((EX)?((void)0):__assert( # EX , filename, __LINE__))
+#define assert(EX)  ((EX)?((void)0):__assert( # EX , __FILE__, __LINE__))
 #ifdef _DEBUG
 #include <assert.h>
 #endif
@@ -131,11 +131,11 @@ Acmd *n_alEnvmixerPull(N_PVoice *filter, s64 sampleOffset, Acmd *p)
     
 
 // #ifdef _DEBUG
-    assert_filename(samples >= 0, "n_env.c");
+    assert(samples >= 0);
 #ifndef N_MICRO
-    assert_filename(samples <= AL_MAX_RSP_SAMPLES, "n_env.c");
+    assert(samples <= AL_MAX_RSP_SAMPLES);
 #else
-    assert_filename(samples <= FIXED_SAMPLE, "n_env.c");
+    assert(samples <= FIXED_SAMPLE);
 #endif
 // #endif /* _DEBUG */
 

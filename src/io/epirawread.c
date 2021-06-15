@@ -40,7 +40,7 @@ s32 osEPiRawReadIo(OSPiHandle *pihandle, u32 devAddr, u32 *data)
     register u32 stat;
     register u32 domain;
 
-    assert_filename(data != NULL, "epirawread.c");
+    assert(data != NULL);
 
     EPI_SYNC(pihandle,stat,domain);
     

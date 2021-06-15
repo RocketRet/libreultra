@@ -55,9 +55,9 @@
 
 s32 __osSpRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size)
 {
-    assert_filename(((u32)devAddr & 0x7) == 0, "sprawdma.c");
-    assert_filename(((u32)dramAddr & 0x7) == 0, "sprawdma.c");
-    assert_filename(((u32)size & 0x7) == 0, "sprawdma.c");
+    assert(((u32)devAddr & 0x7) == 0);
+    assert(((u32)dramAddr & 0x7) == 0);
+    assert(((u32)size & 0x7) == 0);
     if (__osSpDeviceBusy())
         return -1;
     IO_WRITE(SP_MEM_ADDR_REG, devAddr);
