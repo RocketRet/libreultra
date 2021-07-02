@@ -159,7 +159,7 @@ OSMesgQueue *osScGetCmdQ(OSSched *sc)
 {
     return &sc->cmdQ;
 }
-extern int count;
+
 /***********************************************************************
  * Scheduler implementation
  **********************************************************************/
@@ -168,7 +168,7 @@ static void __scMain(void *arg)
     OSMesg msg;
     OSSched *sc = (OSSched *)arg;
     OSScClient *client;
-    // static int count = 0;
+    static int count = 0;
     
     while (1) {
         
@@ -209,8 +209,8 @@ static void __scMain(void *arg)
 /*
  * scHandleRetrace()
  */
-extern int dp_busy;// static int dp_busy = 0;
-extern int dpCount;// static int dpCount = 0;
+static int dp_busy = 0;
+static int dpCount = 0;
 
 void __scHandleRetrace(OSSched *sc)
 {
@@ -360,7 +360,7 @@ OSScTask *__scTaskReady(OSScTask *t)
 
     return 0;
 }
-extern int firsttime;
+
 /*
  * __scTaskComplete checks to see if the task is complete (all RCP
  * operations have been performed) and sends the done message to the
@@ -369,7 +369,7 @@ extern int firsttime;
 s32 __scTaskComplete(OSSched *sc, OSScTask *t) 
 {
     int rv;
-    // static int firsttime = 1;
+    static int firsttime = 1;
 
     if ((t->state & OS_SC_RCP_MASK) == 0) { /* none of the needs bits set */
 
