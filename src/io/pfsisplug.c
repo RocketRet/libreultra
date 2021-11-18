@@ -4,54 +4,48 @@
 // TODO bss
 // TODO regalloc
 extern OSPifRam __osPfsPifRam;
-s32 osPfsIsPlug(OSMesgQueue *queue, u8 *inpattern) // queue: s2 in original, s3 in diff, pattern: s7 in both
-{
-    OSContStatus data[MAXCONTROLLERS]; // sp + 0x10
-    OSMesg dummy; // sp + 0x20
-    u8 bitpattern; // sp + 0x24
-    u32 bits; // s3 in original code, s1 in diff
-    int crc_error_cnt; // s0 in original code, s0 in diff
-    u8 *pattern;
 
-    pattern = inpattern;
-    bits = 0;
-    crc_error_cnt = 3;
+s32 osPfsIsPlug(OSMesgQueue* mq, u8* pattern) {
+    s32 ret = 0;
+    OSMesg msg;
+    u8 bitpattern;
+    OSContStatus contData[MAXCONTROLLERS];
+    s32 channel;
+    u8 bits = 0;
+    s32 crcErrorCount = 3;
 
     __osSiGetAccess();
-    while (TRUE)
-    {
-        s32 ret; // s6 in original code, s4 in diff
-        int channel; // a0 in both
+
+    do {
         __osPfsRequestData(CONT_CMD_REQUEST_STATUS);
+
         ret = __osSiRawStartDma(OS_WRITE, &__osPfsPifRam);
-        osRecvMesg(queue, &dummy, OS_MESG_BLOCK);
+        osRecvMesg(mq, &msg, OS_MESG_BLOCK);
+
         ret = __osSiRawStartDma(OS_READ, &__osPfsPifRam);
-        osRecvMesg(queue, &dummy, OS_MESG_BLOCK);
-        __osPfsGetInitData(&bitpattern, data);
-        for (channel = 0; channel < __osMaxControllers; channel++)
-        {
-            if ((data[channel].status & CONT_ADDR_CRC_ER) == 0)
-            {
-                crc_error_cnt--;
+        osRecvMesg(mq, &msg, OS_MESG_BLOCK);
+
+        __osPfsGetInitData(&bitpattern, &contData[0]);
+
+        for (channel = 0; channel < __osMaxControllers; channel++) {
+            if ((contData[channel].status & CONT_ADDR_CRC_ER) == 0) {
+                crcErrorCount--;
                 break;
             }
         }
-        if (channel == __osMaxControllers)
-            crc_error_cnt = 0;
-        if (crc_error_cnt < 1)
-        {
-            for (channel = 0; channel < __osMaxControllers; channel++)
-            {
-                OSContStatus *dat = &data[0];
-                int shift = 1;
-                if (dat[channel].errno == 0 && (dat[channel].status & CONT_CARD_ON) != 0)
-                    bits |= shift << channel;
-            }
-            __osSiRelAccess();
-            *pattern = bits;
-            return ret;
+        if (channel == __osMaxControllers) {
+            crcErrorCount = 0;
+        }
+    } while (crcErrorCount > 0);
+
+    for (channel = 0; channel < __osMaxControllers; channel++) {
+        if ((contData[channel].errno == 0) && ((contData[channel].status & CONT_CARD_ON) != 0)) {
+            bits |= (1 << channel);
         }
     }
+    __osSiRelAccess();
+    *pattern = bits;
+    return ret;
 }
 void __osPfsRequestData(u8 cmd)
 {
@@ -84,17 +78,17 @@ void __osPfsGetInitData(u8 *pattern, OSContStatus *data)
     u8 bits;
     bits = 0;
     ptr = (u8 *)&__osPfsPifRam;
-    for (i = 0; i < __osMaxControllers; i++, ptr += sizeof(__OSContRequesFormat))
+    for (i = 0; i < __osMaxControllers; i++, ptr += sizeof(__OSContRequesFormat), data++)
     {
         requestformat = *(__OSContRequesFormat *)ptr;
         data->errno = CHNL_ERR(requestformat);
-        if (data->errno == 0)
+        if (data->errno)
         {
-            data->type = (requestformat.typel << 8) | (requestformat.typeh);
-            data->status = requestformat.status;
-            bits |= 1 << i;
+            continue;
         }
-        data++;
+        data->type = (requestformat.typel << 8) | (requestformat.typeh);
+        data->status = requestformat.status;
+        bits |= 1 << i;
     }
     *pattern = bits;
 }
