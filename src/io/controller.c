@@ -4,11 +4,7 @@
 #include "siint.h"
 
 #define HALF_A_SECOND OS_USEC_TO_CYCLES(500000)
-// TODO bss
 u32 __osContinitialized = 0;
-// OSPifRam __osContPifRam;
-// u8 __osContLastCmd;
-// u8 __osMaxControllers;
 
 extern OSPifRam __osContPifRam;
 extern u8 __osContLastCmd;
@@ -17,6 +13,29 @@ extern u8 __osMaxControllers;
 // OSTimer __osEepromTimer;
 // OSMesgQueue __osEepromTimerQ;
 // OSMesg __osEepromTimerMsg;
+
+// u8 __osContLastCmd;
+// static u8 pad1[12];
+// OSMesgQueue __osEepromTimerQ;
+// static u8 pad2[8];
+// OSMesg __osEepromTimerMsg;
+// static u8 pad3[8];
+// OSTimer __osEepromTimer; 
+// u8 __osMaxControllers;
+// static u8 pad4[12];
+// OSPifRam __osContPifRam;
+
+
+// // u8 __osContLastCmd __attribute__ ((section (".bss"))) = {0};
+// // // static u8 pad1[12] __attribute__((section(".bss"))) = {0};
+// // OSMesgQueue __osEepromTimerQ __attribute__ ((section (".bss"))) = {0};
+// // // static u8 pad2[8] __attribute__((section(".bss"))) = {0};
+// // OSMesg __osEepromTimerMsg __attribute__ ((section (".bss"))) = {0};
+// // // static u8 pad3[8] __attribute__((section(".bss"))) = {0};
+// // OSTimer __osEepromTimer __attribute__ ((section (".bss"))) = {0};
+// // u8 __osMaxControllers __attribute__ ((section (".bss"))) = {0};
+// // // static u8 pad4[12] __attribute__((section(".bss"))) = {0};
+// // OSPifRam __osContPifRam __attribute__ ((section (".bss"))) = {0};
 s32 osContInit(OSMesgQueue *mq, u8 *bitpattern, OSContStatus *data)
 {
     OSMesg dummy;
