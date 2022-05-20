@@ -87,7 +87,7 @@ static s32 NULL_PARAMS[10] = {
 };
 
 
-void init_lpfilter(ALLowPass *lp)
+void _init_lpfilter(ALLowPass *lp)
 {
     s32		i, temp;
     s16		fc;
@@ -189,7 +189,7 @@ void alFxNew(ALFx *r, ALSynConfig *c, ALHeap *hp)
 	    d->lp = alHeapAlloc(hp, 1, sizeof(ALLowPass));
 	    d->lp->fstate = alHeapAlloc(hp, 1, sizeof(POLEF_STATE));
 	    d->lp->fc = param[j++];
-	    init_lpfilter(d->lp);
+	    _init_lpfilter(d->lp);
 	} else {
 	    d->lp = 0;
 	    j++;

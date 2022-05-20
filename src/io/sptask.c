@@ -1,3 +1,5 @@
+#include <bss.h>
+
 #include <os_internal.h>
 #include <sptask.h>
 #include <bstring.h>
@@ -9,7 +11,7 @@
 	{                                           \
 		ptr = (void *)osVirtualToPhysical(ptr); \
 	}
-extern OSTask tmp_task; // TODO static
+static OSTask tmp_task BSS;
 static OSTask *_VirtualToPhysicalTask(OSTask *intp)
 {
 	OSTask *tp;

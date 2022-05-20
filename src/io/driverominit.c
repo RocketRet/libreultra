@@ -1,8 +1,9 @@
+#include <bss.h>
 #include <os_internal.h>
 #include <rcp.h>
 #include <bstring.h>
-// TODO bss
-extern OSPiHandle DriveRomHandle;
+
+OSPiHandle DriveRomHandle BSS;
 OSPiHandle *osDriveRomInit()
 {
 	u32 saveMask;

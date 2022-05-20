@@ -160,7 +160,7 @@ void n_alFxNew(ALFx **fx_ar, ALSynConfig *c, ALHeap *hp)
 	    d->lp = alHeapAlloc(hp, 1, sizeof(ALLowPass));
 	    d->lp->fstate = alHeapAlloc(hp, 1, sizeof(POLEF_STATE));
 	    d->lp->fc = param[j++];
-	    init_lpfilter(d->lp);
+	    _init_lpfilter(d->lp);
 	} else {
 	    d->lp = 0;
 	    j++;

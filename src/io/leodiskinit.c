@@ -1,9 +1,11 @@
 #include <os_internal.h>
 #include <rcp.h>
 #include <bstring.h>
-// TODO bss
-extern OSPiHandle LeoDiskHandle;
-extern OSPiHandle *__osDiskHandle;
+
+OSPiHandle LeoDiskHandle __attribute__ ((section (".bss"))) = {0};
+static u8 pad[0xC] __attribute__ ((section (".bss"))) = {0};
+OSPiHandle *__osDiskHandle __attribute__ ((section (".bss"))) = {0};
+
 OSPiHandle *osLeoDiskInit()
 {
 	u32 saveMask;

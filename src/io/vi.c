@@ -1,3 +1,4 @@
+#include <bss.h>
 #include <os_internal.h>
 #include <R4300.h>
 #include <rcp.h>

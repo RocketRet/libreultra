@@ -1,9 +1,9 @@
+#include <bss.h>
 #include <os_internal.h>
 #include "controller.h"
 #include "siint.h"
-// TODO bss
-// TODO regalloc
-extern OSPifRam __osPfsPifRam;
+
+OSPifRam __osPfsPifRam BSS;
 
 s32 osPfsIsPlug(OSMesgQueue* mq, u8* pattern) {
     s32 ret = 0;

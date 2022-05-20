@@ -1,11 +1,11 @@
+#include <bss.h>
 #include <os_internal.h>
 
 #define SI_Q_BUF_LEN 1
-// static OSMesg siAccessBuf[SI_Q_BUF_LEN];
-// OSMesgQueue __osSiAccessQueue;
+OSMesg siAccessBuf[SI_Q_BUF_LEN] BSS;
+static u8 pad1[0xC] BSS;
+OSMesgQueue __osSiAccessQueue BSS;
 u32 __osSiAccessQueueEnabled = 0;
-extern OSMesg siAccessBuf[SI_Q_BUF_LEN];
-extern OSMesgQueue __osSiAccessQueue;
 
 void __osSiCreateAccessQueue(void)
 {

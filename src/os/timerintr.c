@@ -1,12 +1,41 @@
+#include <bss.h>
+
 #include <os_internal.h>
 #include "osint.h"
 
+// See below for an explanation of how this is a bugfix
+#ifndef BUGFIXES
+u8 __osBaseTimerBug[];
+OSTimer *__osTimerList = (OSTimer*)&__osBaseTimerBug;
+#else
 OSTimer *__osTimerList = &__osBaseTimer;
-extern OSTimer __osBaseTimer;
-extern OSTime __osCurrentTime; // TODO bss
-extern u32 __osBaseCounter;
-extern u32 __osViIntrCount;
-extern u32 __osTimerCounter;
+#endif
+
+// OSTimer __osBaseTimer;
+// OSTime __osCurrentTime;
+// u32 __osBaseCounter;
+// u32 __osViIntrCount;
+// u32 __osTimerCounter;
+
+OSTime __osCurrentTime BSS;
+static u8 pad1[0x8] BSS;
+u32 __osViIntrCount BSS;
+static u8 pad2[0xC] BSS;
+u32 __osTimerCounter BSS;
+static u8 pad3[0xC] BSS;
+u32 __osBaseCounter BSS;
+static u8 pad4[0xC + 0x8] BSS;
+
+//! BUG: This should be OSTimer __osBaseTimer, but due to a bug in the SN64 toolchain
+// it overlaps the memory occupied by `siAccessBuf` in siacs.c. Therefore, this needs
+// to be declared as a smaller variable so that the two can be linked, which results
+// in an out-of-bounds access in `__osTimerServicesInit`.
+#ifndef BUGFIXES
+u8 __osBaseTimerBug[0x10] BSS;
+#else
+OSTimer __osBaseTimer BSS;
+#endif
+
 void __osTimerServicesInit(void)
 {
 	__osCurrentTime = 0;

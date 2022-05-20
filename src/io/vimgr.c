@@ -4,12 +4,23 @@
 #include "../os/osint.h"
  
 OSDevMgr __osViDevMgr = {0};
-extern OSThread viThread;
-extern unsigned char viThreadStack[OS_VIM_STACKSIZE];
-extern OSMesgQueue viEventQueue;
-extern OSMesg viEventBuf[5];
-extern OSIoMesg viRetraceMsg;
-extern OSIoMesg viCounterMsg;
+// extern OSThread viThread;
+// extern unsigned char viThreadStack[OS_VIM_STACKSIZE];
+// extern OSMesgQueue viEventQueue;
+// extern OSMesg viEventBuf[5];
+// extern OSIoMesg viRetraceMsg;
+// extern OSIoMesg viCounterMsg;
+
+
+u16 retrace __attribute__ ((section (".bss"))) = {0};
+OSThread viThread __attribute__ ((section (".bss"))) = {0};
+static u8 pad1[8] __attribute__ ((section (".bss"))) = {0};
+unsigned char viThreadStack[OS_VIM_STACKSIZE] __attribute__ ((section (".bss"))) = {0};
+OSMesgQueue viEventQueue __attribute__ ((section (".bss"))) = {0};
+OSMesg viEventBuf[5] __attribute__ ((section (".bss"))) = {0};
+static u8 pad2[4] __attribute__ ((section (".bss"))) = {0};
+OSIoMesg viRetraceMsg __attribute__ ((section (".bss"))) = {0};
+OSIoMesg viCounterMsg __attribute__ ((section (".bss"))) = {0};
 
 static void viMgrMain(void *arg);
 void osCreateViManager(OSPri pri)
@@ -54,7 +65,7 @@ void osCreateViManager(OSPri pri)
 		}
 	}
 }
-extern u16 retrace;
+
 static void viMgrMain(void *arg)
 {
 	__OSViContext *vc;

@@ -1,8 +1,10 @@
+#include <bss.h>
+
 #include <os_internal.h>
 #include <R4300.h>
 #include <rcp.h>
-// TODO bss
-extern OSPiHandle CartRomHandle;
+
+OSPiHandle CartRomHandle BSS;
 OSPiHandle *osCartRomInit(void)
 {
 	u32 domain;

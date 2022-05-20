@@ -1,9 +1,13 @@
+#include <bss.h>
+
 #include <os_internal.h>
-// TODO bss
+
 #define PI_Q_BUF_LEN 1
 u32 __osPiAccessQueueEnabled = 0;
-extern /*static*/ OSMesg piAccessBuf[PI_Q_BUF_LEN];
-extern OSMesgQueue __osPiAccessQueue;
+static OSMesg piAccessBuf[PI_Q_BUF_LEN] BSS;
+static u8 pad1[0xC] BSS;
+OSMesgQueue __osPiAccessQueue BSS;
+
 void __osPiCreateAccessQueue(void)
 {
 

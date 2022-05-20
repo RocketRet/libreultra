@@ -1,13 +1,20 @@
 #include <os_internal.h>
 #include "controller.h"
 #include "siint.h"
-// TODO bss
+
 static void _MakeMotorData(int channel, u16 address, u8 *buffer, OSPifRam *mdata);
 u32 __osMotorinitialized[MAXCONTROLLERS] = {0, 0, 0, 0};
-extern OSPifRam _MotorStopData[MAXCONTROLLERS];
-extern OSPifRam _MotorStartData[MAXCONTROLLERS];
-extern u8 _motorstopbuf[32];
-extern u8 _motorstartbuf[32];
+
+// extern OSPifRam _MotorStopData[MAXCONTROLLERS];
+// extern OSPifRam _MotorStartData[MAXCONTROLLERS];
+// extern u8 _motorstopbuf[32];
+// extern u8 _motorstartbuf[32];
+
+u8 _motorstopbuf[32] __attribute__ ((section (".bss"))) = {0};
+OSPifRam _MotorStopData[MAXCONTROLLERS] __attribute__ ((section (".bss"))) = {0};
+u8 _motorstartbuf[32] __attribute__ ((section (".bss"))) = {0};
+OSPifRam _MotorStartData[MAXCONTROLLERS] __attribute__ ((section (".bss"))) = {0};
+
 s32 osMotorStop(OSPfs *pfs)
 {
     int i;

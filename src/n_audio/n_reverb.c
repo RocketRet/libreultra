@@ -222,7 +222,7 @@ s32 n_alFxParamHdl(void *filter, s32 paramID, void *param)
       if(f->delay[s].lp)
 	{
 	  f->delay[s].lp->fc = (s16)val;
-	  init_lpfilter(f->delay[s].lp);
+	  _init_lpfilter(f->delay[s].lp);
 	}
       break;
     }

@@ -1,8 +1,10 @@
+#include <bss.h>
+
 #include <os.h>
 #include <os_internal.h>
 #include <R4300.h>
 #include <rcp.h>
-// TODO bss
+
 typedef struct
 {
    /* 0x0 */ unsigned int inst1;
@@ -16,7 +18,7 @@ OSTime osClockRate = OS_CLOCK_RATE;
 s32 osViClock = VI_NTSC_CLOCK;
 u32 __osShutdown = 0;
 u32 __OSGlobalIntMask = OS_IM_ALL;
-u32 __osFinalrom __attribute__((section(".bss"))) = {0};
+u32 __osFinalrom BSS;
 
 void osInitialize()
 {

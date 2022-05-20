@@ -1,14 +1,14 @@
+#include <bss.h>
 #include <os_internal.h>
 #include <rcp.h>
 #include <bstring.h>
 #include "../os/osint.h"
 #include "piint.h"
 
-// TODO bss
-//TODO: so many magic constants :'(
 static void __osLeoResume(void);
 static void __osLeoAbnormalResume(void);
-extern u8 leoDiskStack[OS_PIM_STACKSIZE]; //technically should have a OS_LEO_STACKSIZE or something..
+u8 leoDiskStack[OS_PIM_STACKSIZE] BSS;
+
 s32 __osLeoInterrupt()
 {
 	u32 stat;

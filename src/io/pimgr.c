@@ -15,7 +15,7 @@ static OSMesgQueue freeRamromQ;
 static OSMesg freeRamromBuf[1];
 #endif
 static OSMesgQueue piEventQueue;
-static OSMesg piEventBuf;//[1];
+static OSMesg piEventBuf[1];
 void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgCnt)
 {
 	u32 savedMask;
@@ -24,7 +24,7 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
 	if (!__osPiDevMgr.active)
 	{
 		osCreateMesgQueue(cmdQ, cmdBuf, cmdMsgCnt);
-		osCreateMesgQueue(&piEventQueue, (OSMesg*)&piEventBuf, 1);
+		osCreateMesgQueue(&piEventQueue, piEventBuf, 1);
 		if (!__osPiAccessQueueEnabled)
 			__osPiCreateAccessQueue();
 		osSetEventMesg(OS_EVENT_PI, &piEventQueue, (OSMesg)0x22222222);
