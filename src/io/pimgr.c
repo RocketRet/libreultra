@@ -1,9 +1,9 @@
 #include <os_internal.h>
 #include "piint.h"
 
-static OSDevMgr __osPiDevMgr = {0};
-static OSPiHandle *__osPiTable = NULL;
-static OSPiHandle *__osCurrentHandle[2] = {&CartRomHandle, &LeoDiskHandle};
+OSDevMgr __osPiDevMgr = {0};
+OSPiHandle *__osPiTable = NULL;
+OSPiHandle *__osCurrentHandle[2] = {&CartRomHandle, &LeoDiskHandle};
 static OSThread piThread;
 static char piThreadStack[OS_PIM_STACKSIZE];
 #ifdef _DEBUG
