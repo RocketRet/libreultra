@@ -1,5 +1,5 @@
 #include "asm_helper.h"
-.rdata
+.section .rodata
 
 #define MI_INTR_MASK 0x3f
 #define CLR_SP 0x0001

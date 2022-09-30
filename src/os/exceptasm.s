@@ -7,7 +7,7 @@
 EXPORT(__osHwIntTable)
 .word 0x0, 0x0, 0x0, 0x0, 0x0
 
-.rdata
+.section .rodata
 #define REDISPATCH 0x00
 #define SW1 0x04
 #define SW2 0x08

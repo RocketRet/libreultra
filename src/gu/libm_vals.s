@@ -1,4 +1,4 @@
-	.rdata
+	.section .rodata
 	.align 4
 	.globl __libm_qnan_f
 __libm_qnan_f:
